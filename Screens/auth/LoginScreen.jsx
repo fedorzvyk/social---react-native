@@ -1,8 +1,3 @@
-import { useCallback } from 'react';
-
-import { useFonts } from 'expo-font';
-import * as SplashScreen from 'expo-splash-screen';
-
 import React, { useState, useEffect } from 'react';
 import {
   StyleSheet,
@@ -18,15 +13,13 @@ import {
   Dimensions,
 } from 'react-native';
 
-SplashScreen.preventAutoHideAsync();
-
 const initialState = {
   login: '',
   email: '',
   password: '',
 };
 
-export default function LoginScreen() {
+export default function LoginScreen({ navigation }) {
   console.log(Platform.OS);
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [state, setState] = useState(initialState);
@@ -34,32 +27,17 @@ export default function LoginScreen() {
     Dimensions.get('window').width - 20 * 2
   );
 
-  const [fontsLoaded] = useFonts({
-    'Roboto-Regular': require('../assets/fonts/Roboto-Regular.ttf'),
-    'Roboto-Medium': require('../assets/fonts/Roboto-Medium.ttf'),
-  });
-
   useEffect(() => {
     const onChange = () => {
       const width = Dimensions.get('window').width - 20 * 2;
       setDimension(width);
-      console.log(width);
+      // console.log(width);
     };
     Dimensions.addEventListener('change', onChange);
-    return () => {
-      Dimensions.removeEventListener('change');
-    };
+    // return () => {
+    //   Dimensions.removeEventListener('change');
+    // };
   }, []);
-
-  const onLayoutRootView = useCallback(async () => {
-    if (fontsLoaded) {
-      await SplashScreen.hideAsync();
-    }
-  }, [fontsLoaded]);
-
-  if (!fontsLoaded) {
-    return null;
-  }
 
   const keyboardHide = () => {
     setIsShowKeyboard(false);
@@ -74,9 +52,9 @@ export default function LoginScreen() {
 
   return (
     <TouchableWithoutFeedback onPress={keyboardHide}>
-      <View style={styles.container} onLayout={onLayoutRootView}>
+      <View style={styles.container}>
         <ImageBackground
-          source={require('../assets/images/Photo_BG.png')}
+          source={require('../../assets/images/Photo_BG.png')}
           style={styles.image}
         >
           <View
@@ -125,7 +103,7 @@ export default function LoginScreen() {
                       secureTextEntry={true}
                     />
                   </View>
-                  {!isShowKeyboard && (
+                  {!isShowKeyboard ? (
                     <View>
                       <TouchableOpacity
                         activeOpacity={0.8}
@@ -135,12 +113,16 @@ export default function LoginScreen() {
                         <Text style={styles.btnTitle}>SIGN IN</Text>
                       </TouchableOpacity>
                       <View style={styles.login}>
-                        <Text style={styles.loginTitle}>
-                          Нет аккаунта? Зарегистрироваться
-                        </Text>
+                        <TouchableOpacity
+                          onPress={() => navigation.navigate('Registration')}
+                        >
+                          <Text style={styles.loginTitle}>
+                            Нет аккаунта? Зарегистрироваться
+                          </Text>
+                        </TouchableOpacity>
                       </View>
                     </View>
-                  )}
+                  ) : null}
                 </View>
               </View>
             </KeyboardAvoidingView>
@@ -176,7 +158,7 @@ const styles = StyleSheet.create({
   headerTitle: {
     color: '#212121',
     fontSize: 30,
-    fontFamily: 'Roboto-Medium',
+    // fontFamily: 'Roboto-Medium',
   },
   form: {
     // marginHorizontal: 16
@@ -214,7 +196,7 @@ const styles = StyleSheet.create({
   btnTitle: {
     color: '#FFFFFF',
     fontSize: 16,
-    fontFamily: 'Roboto-Regular',
+    // fontFamily: 'Roboto-Regular',
   },
 
   login: {

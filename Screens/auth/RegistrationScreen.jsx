@@ -1,8 +1,3 @@
-import { useCallback } from 'react';
-
-import { useFonts } from 'expo-font';
-import * as SplashScreen from 'expo-splash-screen';
-
 import React, { useState, useEffect } from 'react';
 import {
   StyleSheet,
@@ -17,9 +12,8 @@ import {
   TouchableWithoutFeedback,
   Dimensions,
   Image,
+  BackHandler,
 } from 'react-native';
-
-SplashScreen.preventAutoHideAsync();
 
 const initialState = {
   login: '',
@@ -27,7 +21,7 @@ const initialState = {
   password: '',
 };
 
-export default function RegistrationScreen() {
+export default function RegistrationScreen({ navigation }) {
   console.log(Platform.OS);
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [state, setState] = useState(initialState);
@@ -35,32 +29,41 @@ export default function RegistrationScreen() {
     Dimensions.get('window').width - 20 * 2
   );
 
-  const [fontsLoaded] = useFonts({
-    'Roboto-Regular': require('../assets/fonts/Roboto-Regular.ttf'),
-    'Roboto-Medium': require('../assets/fonts/Roboto-Medium.ttf'),
-  });
+  // useEffect(() => {
+  //   const onChange = () => {
+  //     const width = Dimensions.get('window').width - 20 * 2;
+  //     setDimension(width);
+  //     // console.log(width);
+  //   };
+  //   Dimensions.addEventListener('change', onChange);
+  //   // return () => {
+  //   //   Dimensions.removeEventListener('change');
+  //   // };
+  // }, []);
 
   useEffect(() => {
-    const onChange = () => {
-      const width = Dimensions.get('window').width - 20 * 2;
-      setDimension(width);
-      console.log(width);
+    const onChange = async () => {
+      const width = (await Dimensions.get('window').width) - 16 * 2;
+
+      await setDimensions(width);
     };
+
     Dimensions.addEventListener('change', onChange);
-    return () => {
-      Dimensions.removeEventListener('change');
+    return async () => await Dimensions.removeEventListener('change', onChange);
+  }, [dimensions]);
+
+  useEffect(() => {
+    const backAction = () => {
+      console.log('back');
     };
+
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      backAction
+    );
+
+    return () => backHandler.remove();
   }, []);
-
-  const onLayoutRootView = useCallback(async () => {
-    if (fontsLoaded) {
-      await SplashScreen.hideAsync();
-    }
-  }, [fontsLoaded]);
-
-  if (!fontsLoaded) {
-    return null;
-  }
 
   const keyboardHide = () => {
     setIsShowKeyboard(false);
@@ -71,13 +74,14 @@ export default function RegistrationScreen() {
     // Keyboard.dismiss();
     console.log(state);
     setState(initialState);
+    navigation.navigate('Posts');
   };
 
   return (
     <TouchableWithoutFeedback onPress={keyboardHide}>
-      <View style={styles.container} onLayout={onLayoutRootView}>
+      <View style={styles.container}>
         <ImageBackground
-          source={require('../assets/images/Photo_BG.png')}
+          source={require('../../assets/images/Photo_BG.png')}
           style={styles.image}
         >
           <View
@@ -138,7 +142,7 @@ export default function RegistrationScreen() {
                       secureTextEntry={true}
                     />
                   </View>
-                  {!isShowKeyboard && (
+                  {!isShowKeyboard ? (
                     <View>
                       <TouchableOpacity
                         activeOpacity={0.8}
@@ -148,18 +152,22 @@ export default function RegistrationScreen() {
                         <Text style={styles.btnTitle}>SIGN UP</Text>
                       </TouchableOpacity>
                       <View style={styles.login}>
-                        <Text style={styles.loginTitle}>
-                          Уже есть аккаунт? Войти
-                        </Text>
+                        <TouchableOpacity
+                          onPress={() => navigation.navigate('Login')}
+                        >
+                          <Text style={styles.loginTitle}>
+                            Уже есть аккаунт? Войти
+                          </Text>
+                        </TouchableOpacity>
                       </View>
                     </View>
-                  )}
+                  ) : null}
                 </View>
               </View>
               <View style={styles.avatar}>
                 <Image
                   // style={styles.tinyLogo}
-                  source={require('../assets/images/avatar.png')}
+                  source={require('../../assets/images/avatar.png')}
                 />
               </View>
             </KeyboardAvoidingView>
@@ -208,6 +216,8 @@ const styles = StyleSheet.create({
     color: '#212121',
     fontSize: 30,
     fontFamily: 'Roboto-Medium',
+    // fontFamily: 'Itim-Regular',
+    // fontFamily: 'Roboto-BoldItalic',
   },
   formRegistration: {
     alignItems: 'center',
@@ -246,6 +256,7 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     fontSize: 16,
     fontFamily: 'Roboto-Regular',
+    // fontFamily: 'Itim-Regular',
   },
 
   login: {
