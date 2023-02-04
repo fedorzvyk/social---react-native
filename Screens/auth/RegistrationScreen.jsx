@@ -14,6 +14,8 @@ import {
   Image,
   BackHandler,
 } from 'react-native';
+import { useDispatch } from 'react-redux';
+import { authSignUpUser } from '../../redux/auth/authOperations';
 
 const initialState = {
   login: '',
@@ -25,6 +27,9 @@ export default function RegistrationScreen({ navigation }) {
   console.log(Platform.OS);
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [state, setState] = useState(initialState);
+
+  const dispatch = useDispatch();
+
   const [dimensions, setDimension] = useState(
     Dimensions.get('window').width - 20 * 2
   );
@@ -43,13 +48,13 @@ export default function RegistrationScreen({ navigation }) {
 
   useEffect(() => {
     const onChange = async () => {
-      const width = (await Dimensions.get('window').width) - 16 * 2;
+      const width = Dimensions.get('window').width - 16 * 2;
 
-      await setDimensions(width);
+      setDimension(width);
     };
 
-    Dimensions.addEventListener('change', onChange);
-    return async () => await Dimensions.removeEventListener('change', onChange);
+    // Dimensions.addEventListener('change', onChange);
+    // return async () => await Dimensions.removeEventListener('change', onChange);
   }, [dimensions]);
 
   useEffect(() => {
@@ -73,8 +78,9 @@ export default function RegistrationScreen({ navigation }) {
     setIsShowKeyboard(false);
     // Keyboard.dismiss();
     console.log(state);
+    dispatch(authSignUpUser(state));
     setState(initialState);
-    navigation.navigate('Posts');
+    // navigation.navigate('Posts');
   };
 
   return (
