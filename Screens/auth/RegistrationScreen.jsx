@@ -51,18 +51,18 @@ export default function RegistrationScreen({ navigation }) {
     // return async () => await Dimensions.removeEventListener('change', onChange);
   }, [dimensions]);
 
-  useEffect(() => {
-    const backAction = () => {
-      console.log('back');
-    };
+  // useEffect(() => {
+  //   const backAction = () => {
+  //     console.log('back');
+  //   };
 
-    const backHandler = BackHandler.addEventListener(
-      'hardwareBackPress',
-      backAction
-    );
+  //   // const backHandler = BackHandler.addEventListener(
+  //   //   'hardwareBackPress',
+  //   //   backAction
+  //   // );
 
-    return () => backHandler.remove();
-  }, []);
+  //   return () => backHandler.remove();
+  // }, []);
 
   const keyboardHide = () => {
     setIsShowKeyboard(false);
@@ -164,10 +164,12 @@ export default function RegistrationScreen({ navigation }) {
                 </View>
               </View>
               <View style={styles.avatar}>
-                <Image
-                  // style={styles.tinyLogo}
-                  source={require('../../assets/images/avatar.png')}
-                />
+                {isShowKeyboard && (
+                  <Image
+                    // style={styles.tinyLogo}
+                    source={require('../../assets/images/avatar.png')}
+                  />
+                )}
               </View>
             </KeyboardAvoidingView>
           </View>
@@ -200,6 +202,7 @@ const styles = StyleSheet.create({
     width: 120,
     height: 120,
     position: 'absolute',
+    backgroundColor: '#F6F6F6',
     top: 0,
     left: '50%',
     transform: [{ translateX: -60 }, { translateY: -60 }],

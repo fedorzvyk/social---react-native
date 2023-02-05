@@ -32,7 +32,7 @@ export default function CreatePostsScreen({ navigation }) {
   const { userId, login } = useSelector(state => state.auth);
 
   const permisionFunction = async () => {
-    const cameraPermission = await Camera.requestPermissionsAsync();
+    const cameraPermission = await Camera.requestCameraPermissionsAsync();
     setCameraPermission(cameraPermission.status === 'granted');
     if (cameraPermission.status !== 'granted') {
       alert('Permission for media access needed.');
