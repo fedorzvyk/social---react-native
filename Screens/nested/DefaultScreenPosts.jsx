@@ -80,7 +80,7 @@ const DefaultScreenPosts = ({ route, navigation }) => {
                     size={18}
                     color="#BDBDBD"
                   />
-                  <Text style={styles.locationText}>{item.place}</Text>
+                  <Text style={styles.locationText}> {item.place}</Text>
                 </TouchableOpacity>
               </View>
             </View>

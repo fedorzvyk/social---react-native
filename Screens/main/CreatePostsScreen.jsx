@@ -127,21 +127,22 @@ export default function CreatePostsScreen({ navigation }) {
 
   return (
     <View style={styles.container}>
-      {/* <View style={styles.cameraWrapper}> */}
       {isFocused && (
-        <Camera style={styles.camera} ref={setCamera} type={type}>
-          {photo && (
-            <View style={styles.photoContainer}>
-              <Image
-                source={{ uri: photo }}
-                style={{ height: 100, width: 100 }}
-              />
-            </View>
-          )}
-          <TouchableOpacity onPress={takePhoto} style={styles.snapContainer}>
-            <FontAwesome name="camera" size={24} color="#FFFFFF" />
-          </TouchableOpacity>
-        </Camera>
+        <View style={styles.cameraWrapper}>
+          <Camera style={styles.camera} ref={setCamera} type={type}>
+            {photo && (
+              <View style={styles.photoContainer}>
+                <Image
+                  source={{ uri: photo }}
+                  style={{ height: 100, width: 100 }}
+                />
+              </View>
+            )}
+            <TouchableOpacity onPress={takePhoto} style={styles.snapContainer}>
+              <FontAwesome name="camera" size={24} color="#FFFFFF" />
+            </TouchableOpacity>
+          </Camera>
+        </View>
       )}
       {/* <TouchableOpacity onPress={toggleCameraType}>
         <Entypo name="cycle" size={24} color="black" />
@@ -179,22 +180,13 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
     paddingHorizontal: 16,
-    // backgroundColor: '#fff',
-    // alignItems: 'center',
-    // justifyContent: 'center',
   },
-  cameraWrapper: {},
+  cameraWrapper: { borderRadius: 8, overflow: 'hidden', marginBottom: 32 },
   camera: {
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: 10,
-    marginBottom: 32,
 
     height: 240,
-    // marginTop: 32,
-    // marginHorizontal: 16,
-    borderRadius: 20,
-    // backgroundColor: '#F6F6F6',
   },
   photoContainer: {
     position: 'absolute',

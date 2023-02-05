@@ -15,13 +15,18 @@ const PostsScreen = ({}) => {
         // options={{ headerShown: false }}
         name="Posts"
         component={DefaultScreenPosts}
+        options={{ headerTitleAlign: 'center' }}
       />
       <NestedScreen.Screen
         name="Comments"
         component={CommentsScreen}
-        // options={{ headerShown: false }}
+        options={{ headerTitleAlign: 'center' }}
       />
-      <NestedScreen.Screen name="Map" component={MapScreen} />
+      <NestedScreen.Screen
+        name="Map"
+        component={MapScreen}
+        options={{ headerTitleAlign: 'center' }}
+      />
     </NestedScreen.Navigator>
   );
 };

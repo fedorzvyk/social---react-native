@@ -77,7 +77,7 @@ export default function LoginScreen({ navigation }) {
             >
               <View style={styles.formRegistration}>
                 <View style={styles.header}>
-                  <Text style={styles.headerTitle}>Войти</Text>
+                  <Text style={styles.headerTitle}>Login</Text>
                 </View>
                 <View
                   // style={styles.form}
@@ -95,7 +95,7 @@ export default function LoginScreen({ navigation }) {
                         setState(prev => ({ ...prev, email: value }))
                       }
                       value={state.email}
-                      placeholder="Адрес электронной почты"
+                      placeholder="Email"
                     />
                   </View>
 
@@ -107,7 +107,7 @@ export default function LoginScreen({ navigation }) {
                         setState(prev => ({ ...prev, password: value }))
                       }
                       value={state.password}
-                      placeholder="Пароль"
+                      placeholder="Password"
                       secureTextEntry={true}
                     />
                   </View>
@@ -121,11 +121,15 @@ export default function LoginScreen({ navigation }) {
                         <Text style={styles.btnTitle}>SIGN IN</Text>
                       </TouchableOpacity>
                       <View style={styles.login}>
+                        <Text style={styles.loginTitle}>
+                          Don't have an account?
+                        </Text>
                         <TouchableOpacity
                           onPress={() => navigation.navigate('Registration')}
                         >
-                          <Text style={styles.loginTitle}>
-                            Нет аккаунта? Зарегистрироваться
+                          <Text style={{ fontSize: 18, color: '#ff6347' }}>
+                            {' '}
+                            Signup
                           </Text>
                         </TouchableOpacity>
                       </View>
@@ -208,10 +212,11 @@ const styles = StyleSheet.create({
   },
 
   login: {
+    display: 'flex',
+    flexDirection: 'row',
     alignItems: 'center',
     marginTop: 16,
-    // marginBottom: 78,
-    // justifyContent: 'center',
+    justifyContent: 'center',
   },
   loginTitle: {
     color: '#1B4371',

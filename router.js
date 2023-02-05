@@ -48,6 +48,7 @@ export default function useRoute(isAuth) {
           tabBarIcon: ({ size, color }) => (
             <AntDesign name="plus" size={size} color={color} />
           ),
+          headerTitleAlign: 'center',
         }}
         name="Create post"
         component={CreatePostsScreen}

@@ -95,7 +95,7 @@ export default function RegistrationScreen({ navigation }) {
             >
               <View style={styles.formRegistration}>
                 <View style={styles.header}>
-                  <Text style={styles.headerTitle}>Регистрация</Text>
+                  <Text style={styles.headerTitle}>Registration</Text>
                 </View>
                 <View
                   // style={styles.form}
@@ -113,7 +113,7 @@ export default function RegistrationScreen({ navigation }) {
                         setState(prev => ({ ...prev, login: value }))
                       }
                       value={state.login}
-                      placeholder="Логин"
+                      placeholder="Login"
                     />
                   </View>
 
@@ -125,7 +125,7 @@ export default function RegistrationScreen({ navigation }) {
                         setState(prev => ({ ...prev, email: value }))
                       }
                       value={state.email}
-                      placeholder="Адрес электронной почты"
+                      placeholder="Email"
                     />
                   </View>
 
@@ -137,7 +137,7 @@ export default function RegistrationScreen({ navigation }) {
                         setState(prev => ({ ...prev, password: value }))
                       }
                       value={state.password}
-                      placeholder="Пароль"
+                      placeholder="Password"
                       secureTextEntry={true}
                     />
                   </View>
@@ -151,11 +151,15 @@ export default function RegistrationScreen({ navigation }) {
                         <Text style={styles.btnTitle}>SIGN UP</Text>
                       </TouchableOpacity>
                       <View style={styles.login}>
+                        <Text style={styles.loginTitle}>
+                          Already have an account?
+                        </Text>
                         <TouchableOpacity
                           onPress={() => navigation.navigate('Login')}
                         >
-                          <Text style={styles.loginTitle}>
-                            Уже есть аккаунт? Войти
+                          <Text style={{ fontSize: 18, color: '#ff6347' }}>
+                            {' '}
+                            Login
                           </Text>
                         </TouchableOpacity>
                       </View>
@@ -262,10 +266,11 @@ const styles = StyleSheet.create({
   },
 
   login: {
+    display: 'flex',
+    flexDirection: 'row',
     alignItems: 'center',
     marginTop: 16,
-    // marginBottom: 78,
-    // justifyContent: 'center',
+    justifyContent: 'center',
   },
   loginTitle: {
     color: '#1B4371',
