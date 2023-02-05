@@ -20,7 +20,7 @@ export const authSignUpUser =
         email,
         password
       );
-      console.log(auth.currentUser);
+      // console.log(auth.currentUser);
       // const userName = auth.currentUser;
       // await userName.updateProfile({
       //   displayName: login,
@@ -36,9 +36,9 @@ export const authSignUpUser =
       };
 
       dispatch(updateUserProfile(userUpdateProfile));
-      console.log(user);
+      // console.log(user);
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       console.log(error.message);
     }
   };
@@ -46,12 +46,12 @@ export const authSignUpUser =
 export const authSignInUser =
   ({ email, password, login }) =>
   async (dispatch, getState) => {
-    console.log('email, password, login', email, password);
+    // console.log('email, password, login', email, password);
     try {
       const user = await signInWithEmailAndPassword(auth, email, password);
-      console.log(user);
+      // console.log(user);
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       console.log(error.message);
     }
   };

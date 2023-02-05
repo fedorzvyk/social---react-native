@@ -22,7 +22,7 @@ const initialState = {
 };
 
 export default function LoginScreen({ navigation }) {
-  console.log(Platform.OS);
+  // console.log(Platform.OS);
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [state, setState] = useState(initialState);
   const [dimensions, setDimension] = useState(

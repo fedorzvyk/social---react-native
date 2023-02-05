@@ -35,7 +35,7 @@ const ProfileScreen = ({ route, navigation }) => {
     dispatch(authSignOutUser());
   };
 
-  console.log(userPosts);
+  // console.log(userPosts);
   return (
     <View style={styles.container}>
       <ImageBackground

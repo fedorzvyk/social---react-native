@@ -1,10 +1,12 @@
 import { collection, addDoc } from 'firebase/firestore';
+import { useIsFocused } from '@react-navigation/native';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { storage, db } from '../../firebase/config';
 
 import React, { useState, useEffect } from 'react';
 import * as Location from 'expo-location';
 import { FontAwesome } from '@expo/vector-icons';
+// import { Entypo } from '@expo/vector-icons';
 
 import { Camera, CameraType } from 'expo-camera';
 import {
@@ -27,9 +29,9 @@ export default function CreatePostsScreen({ navigation }) {
   const [location, setLocation] = useState(null);
   const [place, setPlace] = useState('');
   const [cameraPermission, setCameraPermission] = useState(null);
-  const [galleryPermission, setGalleryPermission] = useState(null);
-
+  const [type, setType] = useState(CameraType.back);
   const { userId, login } = useSelector(state => state.auth);
+  const isFocused = useIsFocused();
 
   const permisionFunction = async () => {
     const cameraPermission = await Camera.requestCameraPermissionsAsync();
@@ -53,8 +55,7 @@ export default function CreatePostsScreen({ navigation }) {
     if (status !== 'granted') {
       console.log('no location');
       return;
-    }
-    setLocation(await Location.getCurrentPositionAsync({}));
+    } else setLocation((await Location.getCurrentPositionAsync({})).coords);
   };
 
   const sendPhoto = async () => {
@@ -62,20 +63,26 @@ export default function CreatePostsScreen({ navigation }) {
     uploadPostToServer();
   };
 
+  // function toggleCameraType() {
+  //   setType(current =>
+  //     current === CameraType.back ? CameraType.front : CameraType.back
+  //   );
+  // }
+
   const uploadPostToServer = async () => {
     const photo = await uploadPhotoToServer();
-    console.log(photo);
+    // console.log(photo);
 
     try {
       const docRef = await addDoc(collection(db, 'posts'), {
         photo,
         title,
-        location: location.coords,
+        location,
         userId,
         login,
         place,
       });
-      console.log('Document written with ID: ', docRef.id);
+      // console.log('Document written with ID: ', docRef.id);
     } catch (e) {
       console.error('Error adding document: ', e);
     }
@@ -114,27 +121,31 @@ export default function CreatePostsScreen({ navigation }) {
     // .catch(error => {
     //   // Handle any errors
     // });
-    console.log(processedPhoto);
+    // console.log(processedPhoto);
     return processedPhoto;
   };
 
   return (
     <View style={styles.container}>
       {/* <View style={styles.cameraWrapper}> */}
-      <Camera style={styles.camera} ref={setCamera}>
-        {photo && (
-          <View style={styles.photoContainer}>
-            <Image
-              source={{ uri: photo }}
-              style={{ height: 100, width: 100 }}
-            />
-          </View>
-        )}
-        <TouchableOpacity onPress={takePhoto} style={styles.snapContainer}>
-          <FontAwesome name="camera" size={24} color="#FFFFFF" />
-        </TouchableOpacity>
-      </Camera>
-
+      {isFocused && (
+        <Camera style={styles.camera} ref={setCamera} type={type}>
+          {photo && (
+            <View style={styles.photoContainer}>
+              <Image
+                source={{ uri: photo }}
+                style={{ height: 100, width: 100 }}
+              />
+            </View>
+          )}
+          <TouchableOpacity onPress={takePhoto} style={styles.snapContainer}>
+            <FontAwesome name="camera" size={24} color="#FFFFFF" />
+          </TouchableOpacity>
+        </Camera>
+      )}
+      {/* <TouchableOpacity onPress={toggleCameraType}>
+        <Entypo name="cycle" size={24} color="black" />
+      </TouchableOpacity> */}
       <View style={styles.inputContainer}>
         <TextInput
           placeholder="Title..."
@@ -142,7 +153,6 @@ export default function CreatePostsScreen({ navigation }) {
           onChangeText={setTitle}
         />
       </View>
-
       <View style={styles.inputContainer}>
         <TextInput
           placeholder="Location..."
@@ -150,9 +160,12 @@ export default function CreatePostsScreen({ navigation }) {
           onChangeText={setPlace}
         />
       </View>
-
       <View>
-        <TouchableOpacity onPress={sendPhoto} style={styles.sendBtn}>
+        <TouchableOpacity
+          disabled={!photo}
+          onPress={sendPhoto}
+          style={styles.sendBtn}
+        >
           <Text style={styles.sendLabel}>SEND</Text>
         </TouchableOpacity>
       </View>
@@ -212,6 +225,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#FF6C00',
+
+    // ...photo({
+    //   true: { backgroundColor: '#yellow' },
+    //   false: { backgroundColor: 'green' },
+    // }),
   },
   sendLabel: {
     color: '#FFFFFF',

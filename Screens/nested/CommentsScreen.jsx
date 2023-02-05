@@ -59,7 +59,7 @@ const CommentsScreen = ({ route }) => {
       console.log('No photo!');
     }
   };
-  console.log(photo);
+  // console.log(photo);
 
   return (
     <View style={styles.container}>
