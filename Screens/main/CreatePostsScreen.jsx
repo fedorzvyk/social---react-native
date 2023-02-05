@@ -4,8 +4,8 @@ import { storage, db } from '../../firebase/config';
 
 import React, { useState, useEffect } from 'react';
 import * as Location from 'expo-location';
+import { FontAwesome } from '@expo/vector-icons';
 
-// import * as Permissions from 'expo-permissions';
 import { Camera, CameraType } from 'expo-camera';
 import {
   View,
@@ -18,46 +18,47 @@ import {
 import { useSelector } from 'react-redux';
 
 export default function CreatePostsScreen({ navigation }) {
-  Camera.requestCameraPermissionsAsync();
+  // Camera.requestCameraPermissionsAsync();
+  // const [permission, requestPermission] = Camera.useCameraPermissions();
 
   const [camera, setCamera] = useState(null);
   const [photo, setPhoto] = useState('');
-  const [comment, setComment] = useState('');
+  const [title, setTitle] = useState('');
   const [location, setLocation] = useState(null);
+  const [place, setPlace] = useState('');
+  const [cameraPermission, setCameraPermission] = useState(null);
+  const [galleryPermission, setGalleryPermission] = useState(null);
 
-  const [permission, requestPermission] = Camera.useCameraPermissions();
-  // requestPermission();
-  console.log(permission);
   const { userId, login } = useSelector(state => state.auth);
 
+  const permisionFunction = async () => {
+    const cameraPermission = await Camera.requestPermissionsAsync();
+    setCameraPermission(cameraPermission.status === 'granted');
+    if (cameraPermission.status !== 'granted') {
+      alert('Permission for media access needed.');
+    }
+  };
+
+  useEffect(() => {
+    permisionFunction();
+  }, []);
+
   const takePhoto = async () => {
-    console.log(permission);
-    if (permission.status !== 'granted') {
-      // setErrorMsg('Permission to access location was denied');
-      console.log('no permission');
-      return;
-    } else {
+    if (camera) {
       const image = await camera.takePictureAsync();
       setPhoto(image.uri);
     }
 
     let { status } = await Location.requestForegroundPermissionsAsync();
     if (status !== 'granted') {
-      // setErrorMsg('Permission to access location was denied');
       console.log('no location');
       return;
     }
     setLocation(await Location.getCurrentPositionAsync({}));
-
-    // setLocation(location);
-    await requestPermission();
   };
 
   const sendPhoto = async () => {
-    // console.log(location);
-    // console.log(comment);
-    // console.log(navigation);
-    navigation.navigate('DefaultScreen', { photo });
+    navigation.navigate('Posts', { photo });
     uploadPostToServer();
   };
 
@@ -68,10 +69,11 @@ export default function CreatePostsScreen({ navigation }) {
     try {
       const docRef = await addDoc(collection(db, 'posts'), {
         photo,
-        comment,
+        title,
         location: location.coords,
         userId,
         login,
+        place,
       });
       console.log('Document written with ID: ', docRef.id);
     } catch (e) {
@@ -124,17 +126,29 @@ export default function CreatePostsScreen({ navigation }) {
           <View style={styles.photoContainer}>
             <Image
               source={{ uri: photo }}
-              style={{ height: 200, width: 200 }}
+              style={{ height: 100, width: 100 }}
             />
           </View>
         )}
         <TouchableOpacity onPress={takePhoto} style={styles.snapContainer}>
-          <Text style={styles.snap}>SNAP</Text>
+          <FontAwesome name="camera" size={24} color="#FFFFFF" />
         </TouchableOpacity>
       </Camera>
 
       <View style={styles.inputContainer}>
-        <TextInput style={styles.input} onChangeText={setComment} />
+        <TextInput
+          placeholder="Title..."
+          style={styles.input}
+          onChangeText={setTitle}
+        />
+      </View>
+
+      <View style={styles.inputContainer}>
+        <TextInput
+          placeholder="Location..."
+          style={styles.input}
+          onChangeText={setPlace}
+        />
       </View>
 
       <View>
@@ -150,6 +164,8 @@ export default function CreatePostsScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#fff',
+    paddingHorizontal: 16,
     // backgroundColor: '#fff',
     // alignItems: 'center',
     // justifyContent: 'center',
@@ -157,18 +173,19 @@ const styles = StyleSheet.create({
   cameraWrapper: {},
   camera: {
     alignItems: 'center',
-    justifyContent: 'flex-end',
+    justifyContent: 'center',
     borderRadius: 10,
+    marginBottom: 32,
 
-    height: '70%',
+    height: 240,
     // marginTop: 32,
-    marginHorizontal: 16,
+    // marginHorizontal: 16,
     borderRadius: 20,
     // backgroundColor: '#F6F6F6',
   },
   photoContainer: {
     position: 'absolute',
-    top: 50,
+    top: 10,
     left: 10,
     borderColor: '#fff',
     borderWidth: 1,
@@ -179,35 +196,35 @@ const styles = StyleSheet.create({
   snapContainer: {
     // marginTop: 140,
     marginBottom: 20,
-    borderWidth: 1,
-    borderColor: '#ff0000',
-    width: 70,
-    height: 70,
+    backgroundColor: 'rgba(255, 255, 255, 0.3)',
+    width: 60,
+    height: 60,
     borderRadius: 50,
     justifyContent: 'center',
     alignItems: 'center',
   },
   sendBtn: {
-    marginHorizontal: 30,
-    height: 40,
-    borderWidth: 2,
-    borderColor: '#20b2aa',
-    borderRadius: 10,
+    // marginHorizontal: 30,
+    height: 51,
+
+    borderRadius: 100,
     marginTop: 20,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: '#FF6C00',
   },
   sendLabel: {
-    color: '#20b2aa',
-    fontSize: 20,
+    color: '#FFFFFF',
+    fontSize: 16,
+    fontFamily: 'Roboto-Regular',
   },
   inputContainer: {
-    marginHorizontal: 10,
+    marginBottom: 32,
   },
   input: {
     height: 50,
     borderWidth: 1,
     borderColor: '#fff',
-    borderBottomColor: '#20b2aa',
+    borderBottomColor: '#E8E8E8',
   },
 });

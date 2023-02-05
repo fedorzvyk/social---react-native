@@ -26,22 +26,26 @@ export default function LoginScreen({ navigation }) {
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [state, setState] = useState(initialState);
   const [dimensions, setDimension] = useState(
-    Dimensions.get('window').width - 20 * 2
+    Dimensions.get('window').width - 16 * 2
   );
-
+  Keyboard.addListener('keyboardDidShow', () => {
+    setIsShowKeyboard(true);
+  });
+  Keyboard.addListener('keyboardDidHide', () => {
+    setIsShowKeyboard(false);
+  });
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const onChange = () => {
-      const width = Dimensions.get('window').width - 20 * 2;
+    const onChange = async () => {
+      const width = Dimensions.get('window').width - 16 * 2;
+
       setDimension(width);
-      // console.log(width);
     };
+
     Dimensions.addEventListener('change', onChange);
-    // return () => {
-    //   Dimensions.removeEventListener('change');
-    // };
-  }, []);
+    // return async () => await Dimensions.removeEventListener('change', onChange);
+  }, [dimensions]);
 
   const keyboardHide = () => {
     setIsShowKeyboard(false);
@@ -63,7 +67,6 @@ export default function LoginScreen({ navigation }) {
           style={styles.image}
         >
           <View
-            // style={styles.wrapper}
             style={{
               ...styles.wrapper,
               height: isShowKeyboard ? 248 : 489,

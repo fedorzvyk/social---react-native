@@ -12,10 +12,15 @@ const PostsScreen = ({}) => {
   return (
     <NestedScreen.Navigator>
       <NestedScreen.Screen
-        name="DefaultScreen"
+        // options={{ headerShown: false }}
+        name="Posts"
         component={DefaultScreenPosts}
       />
-      <NestedScreen.Screen name="Comments" component={CommentsScreen} />
+      <NestedScreen.Screen
+        name="Comments"
+        component={CommentsScreen}
+        // options={{ headerShown: false }}
+      />
       <NestedScreen.Screen name="Map" component={MapScreen} />
     </NestedScreen.Navigator>
   );

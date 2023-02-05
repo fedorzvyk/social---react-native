@@ -7,27 +7,32 @@ import {
   TouchableOpacity,
   SafeAreaView,
   FlatList,
+  Image,
 } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { useSelector } from 'react-redux';
 import { db } from '../../firebase/config';
 import {
-  setDoc,
   doc,
   collection,
   addDoc,
   onSnapshot,
+  getDoc,
 } from 'firebase/firestore/';
+import { clearLogEntriesAsync } from 'expo-updates';
 
 const CommentsScreen = ({ route }) => {
   const { postId } = route.params;
 
   const [comment, setComment] = useState('');
   const [allComments, setAllComments] = useState([]);
+  const [photo, setPhoto] = useState('http');
 
   const { login } = useSelector(state => state.auth);
 
   useEffect(() => {
     getAllPosts();
+    getPhoto();
   }, []);
 
   const createPost = async () => {
@@ -44,26 +49,48 @@ const CommentsScreen = ({ route }) => {
     );
   };
 
+  const getPhoto = async () => {
+    const docRef = await doc(db, 'posts', postId);
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+      await setPhoto(docSnap.data().photo);
+    } else {
+      console.log('No photo!');
+    }
+  };
+  console.log(photo);
+
   return (
     <View style={styles.container}>
-      <SafeAreaView style={styles.container}>
+      <View>
+        <Image source={{ uri: photo }} style={styles.image} />
+      </View>
+      <SafeAreaView style={styles.commentsContainer}>
         <FlatList
           data={allComments}
           renderItem={({ item }) => (
             <View style={styles.commentContainer}>
               <Text>{item.login}</Text>
-              <Text>{item.comment}</Text>
+              <Text style={styles.comment}>{item.comment}</Text>
             </View>
           )}
           keyExtractor={item => item.id}
         />
       </SafeAreaView>
       <View style={styles.inputContainer}>
-        <TextInput style={styles.input} onChangeText={setComment} />
+        <View style={styles.inputField}>
+          <TextInput
+            placeholder="Comment..."
+            style={styles.input}
+            onChangeText={setComment}
+          />
+        </View>
+        <TouchableOpacity onPress={createPost} style={styles.sendBtn}>
+          {/* <Text style={styles.sendLabel}>add post</Text> */}
+          <Ionicons name="arrow-up-circle" size={34} color="#FF6C00" />
+        </TouchableOpacity>
       </View>
-      <TouchableOpacity onPress={createPost} style={styles.sendBtn}>
-        <Text style={styles.sendLabel}>add post</Text>
-      </TouchableOpacity>
     </View>
   );
 };
@@ -71,38 +98,56 @@ const CommentsScreen = ({ route }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#FFFFFF',
+    // justifyContent: 'center',
+    paddingHorizontal: 16,
+  },
+  commentsContainer: {
+    flex: 1,
   },
   commentContainer: {
-    borderWidth: 1,
-    borderColor: '#20b2aa',
-    marginHorizontal: 10,
-    padding: 10,
-    marginBottom: 10,
+    borderRadius: 6,
+    backgroundColor: 'rgba(0, 0, 0, 0.05)',
+    width: '100%',
+    marginBottom: 24,
   },
+  comment: { color: '#212121', fontSize: 13, fontFamily: 'Roboto-Regular' },
   sendBtn: {
-    marginHorizontal: 30,
-    height: 40,
-    borderWidth: 2,
-    borderColor: '#20b2aa',
-    borderRadius: 10,
-    marginTop: 20,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 30,
+    borderRadius: 50,
+    position: 'absolute',
+    top: 0,
+    left: '100%',
+    transform: [{ translateX: -42 }, { translateY: 8 }],
   },
   sendLabel: {
     color: '#20b2aa',
     fontSize: 20,
   },
   inputContainer: {
-    marginHorizontal: 10,
-    marginBottom: 20,
+    position: 'relative',
+    marginBottom: 16,
+    marginTop: 31,
+    // marginHorizontal: 10,
+    // marginBottom: 20,
   },
   input: {
     height: 50,
+    backgroundColor: '#F6F6F6',
     borderWidth: 1,
-    borderColor: 'transparent',
-    borderBottomColor: '#20b2aa',
+    borderColor: '#E8E8E8',
+    // borderBottomColor: '#20b2aa',
+    borderRadius: 100,
+    padding: 16,
+    color: '#212121',
+    placeholderTextColor: '#BDBDBD',
+  },
+  image: {
+    width: '100%',
+    marginTop: 32,
+    marginBottom: 32,
+    // flex: 1,
+    height: 240,
+    borderRadius: 8,
   },
 });
 

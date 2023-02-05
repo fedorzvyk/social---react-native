@@ -35,11 +35,12 @@ export default function useRoute(isAuth) {
     <MainTab.Navigator screenOptions={{ tabBarShowLabel: false }}>
       <MainTab.Screen
         options={{
+          headerShown: false,
           tabBarIcon: ({ size, color }) => (
             <AntDesign name="appstore-o" size={size} color={color} />
           ),
         }}
-        name="Posts"
+        name="PostsScreen"
         component={PostsScreen}
       />
       <MainTab.Screen
@@ -56,6 +57,7 @@ export default function useRoute(isAuth) {
           tabBarIcon: ({ size, color }) => (
             <Feather name="user" size={size} color={color} />
           ),
+          headerShown: false,
         }}
         name="Profile"
         component={ProfileScreen}

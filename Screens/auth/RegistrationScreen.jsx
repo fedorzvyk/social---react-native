@@ -24,7 +24,7 @@ const initialState = {
 };
 
 export default function RegistrationScreen({ navigation }) {
-  console.log(Platform.OS);
+  // console.log(Platform.OS);
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [state, setState] = useState(initialState);
 
@@ -34,26 +34,20 @@ export default function RegistrationScreen({ navigation }) {
     Dimensions.get('window').width - 20 * 2
   );
 
-  // useEffect(() => {
-  //   const onChange = () => {
-  //     const width = Dimensions.get('window').width - 20 * 2;
-  //     setDimension(width);
-  //     // console.log(width);
-  //   };
-  //   Dimensions.addEventListener('change', onChange);
-  //   // return () => {
-  //   //   Dimensions.removeEventListener('change');
-  //   // };
-  // }, []);
+  Keyboard.addListener('keyboardDidShow', () => {
+    setIsShowKeyboard(true);
+  });
+  Keyboard.addListener('keyboardDidHide', () => {
+    setIsShowKeyboard(false);
+  });
 
   useEffect(() => {
     const onChange = async () => {
       const width = Dimensions.get('window').width - 16 * 2;
-
       setDimension(width);
     };
 
-    // Dimensions.addEventListener('change', onChange);
+    Dimensions.addEventListener('change', onChange);
     // return async () => await Dimensions.removeEventListener('change', onChange);
   }, [dimensions]);
 
@@ -80,7 +74,6 @@ export default function RegistrationScreen({ navigation }) {
     console.log(state);
     dispatch(authSignUpUser(state));
     setState(initialState);
-    // navigation.navigate('Posts');
   };
 
   return (
