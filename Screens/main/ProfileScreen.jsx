@@ -51,6 +51,7 @@ const ProfileScreen = ({ route, navigation }) => {
               <Text style={styles.loginTitle}>{login}</Text>
             </View>
             <FlatList
+              style={{ marginHorizontal: 16 }}
               data={userPosts}
               keyExtractor={(item, indx) => indx.toString()}
               renderItem={({ item }) => (
@@ -109,10 +110,7 @@ const ProfileScreen = ({ route, navigation }) => {
             />
           </View>
           <View style={styles.avatar}>
-            <Image
-              // style={styles.tinyLogo}
-              source={require('../../assets/images/avatar.png')}
-            />
+            <Image source={require('../../assets/images/avatar.png')} />
           </View>
         </View>
       </ImageBackground>
@@ -130,7 +128,7 @@ const styles = StyleSheet.create({
     height: 549,
     borderTopLeftRadius: 25,
     borderTopRightRadius: 25,
-    paddingHorizontal: 16,
+    // paddingHorizontal: 16,
     paddingBottom: 150,
 
     // position: 'relative',
@@ -150,11 +148,13 @@ const styles = StyleSheet.create({
 
     // alignItems: 'center',
   },
+
   btn: {
     marginTop: 24,
     marginRight: 16,
     marginLeft: 'auto',
   },
+
   avatar: {
     width: 120,
     height: 120,
