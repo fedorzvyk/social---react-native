@@ -79,6 +79,7 @@ export default function CreatePostsScreen({ navigation }) {
     setIsShowKeyboard(false);
     setPlace('');
     setTitle('');
+    setPhoto('');
   };
 
   // function toggleCameraType() {
@@ -89,10 +90,8 @@ export default function CreatePostsScreen({ navigation }) {
 
   const uploadPostToServer = async () => {
     const photo = await uploadPhotoToServer();
-    // console.log(photo);
-
     try {
-      const docRef = await addDoc(collection(db, 'posts'), {
+      await addDoc(collection(db, 'posts'), {
         photo,
         title,
         location,
@@ -100,9 +99,8 @@ export default function CreatePostsScreen({ navigation }) {
         login,
         place,
       });
-      // console.log('Document written with ID: ', docRef.id);
     } catch (e) {
-      console.error('Error adding document: ', e);
+      console.error('Error adding post: ', e);
     }
   };
 
@@ -185,14 +183,18 @@ export default function CreatePostsScreen({ navigation }) {
         </View>
         <View
         // style={{
-        //   marginBottom: isShowKeyboard ? 50 : 200,
-        //   // width: dimensions,
+        //   marginBottom: isShowKeyboard ? 0 : 0,
         // }}
         >
           <TouchableOpacity
             disabled={!photo}
             onPress={sendPhoto}
-            style={styles.sendBtn}
+            style={
+              !photo || !title || !place
+                ? { ...styles.sendBtn, ...styles.buttonDisabled }
+                : styles.sendBtn
+            }
+            // style={styles.sendBtn}
           >
             <Text style={styles.sendLabel}>SEND</Text>
           </TouchableOpacity>
@@ -245,18 +247,16 @@ const styles = StyleSheet.create({
   sendBtn: {
     // marginHorizontal: 30,
     height: 51,
-
     borderRadius: 100,
     marginTop: 20,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#FF6C00',
-
-    // ...photo({
-    //   true: { backgroundColor: '#yellow' },
-    //   false: { backgroundColor: 'green' },
-    // }),
   },
+  buttonDisabled: {
+    backgroundColor: 'grey',
+  },
+
   sendLabel: {
     color: '#FFFFFF',
     fontSize: 16,
