@@ -183,11 +183,16 @@ export default function CreatePostsScreen({ navigation }) {
         </View>
         <View
         // style={{
-        //   marginBottom: isShowKeyboard ? 0 : 0,
+        //   marginBottom: isShowKeyboard ? 20 : 20,
         // }}
         >
+          {(!photo || !title || !place) && (
+            <Text style={styles.notice}>
+              *Make photo and fill out all fields
+            </Text>
+          )}
           <TouchableOpacity
-            disabled={!photo}
+            disabled={!photo || !title || !place}
             onPress={sendPhoto}
             style={
               !photo || !title || !place
@@ -224,6 +229,13 @@ const styles = StyleSheet.create({
 
     height: 240,
   },
+  notice: {
+    alignSelf: 'center',
+    color: 'red',
+    fontSize: 12,
+    fontFamily: 'Roboto-Regular',
+  },
+
   photoContainer: {
     position: 'absolute',
     top: 10,
@@ -248,7 +260,7 @@ const styles = StyleSheet.create({
     // marginHorizontal: 30,
     height: 51,
     borderRadius: 100,
-    marginTop: 20,
+    marginTop: 5,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#FF6C00',
