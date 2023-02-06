@@ -39,7 +39,7 @@ export const authSignUpUser =
       // console.log(user);
     } catch (error) {
       // console.log(error);
-      console.log(error.message);
+      alert(error.message);
     }
   };
 
@@ -52,7 +52,7 @@ export const authSignInUser =
       // console.log(user);
     } catch (error) {
       // console.log(error);
-      console.log(error.message);
+      alert(error.message);
     }
   };
 

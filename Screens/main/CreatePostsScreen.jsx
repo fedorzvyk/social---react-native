@@ -16,6 +16,8 @@ import {
   TouchableOpacity,
   Image,
   TextInput,
+  TouchableWithoutFeedback,
+  Keyboard,
 } from 'react-native';
 import { useSelector } from 'react-redux';
 
@@ -32,6 +34,19 @@ export default function CreatePostsScreen({ navigation }) {
   const [type, setType] = useState(CameraType.back);
   const { userId, login } = useSelector(state => state.auth);
   const isFocused = useIsFocused();
+  const [isShowKeyboard, setIsShowKeyboard] = useState(false);
+
+  const keyboardHide = () => {
+    setIsShowKeyboard(false);
+    Keyboard.dismiss();
+  };
+
+  Keyboard.addListener('keyboardDidShow', () => {
+    setIsShowKeyboard(true);
+  });
+  Keyboard.addListener('keyboardDidHide', () => {
+    setIsShowKeyboard(false);
+  });
 
   const permisionFunction = async () => {
     const cameraPermission = await Camera.requestCameraPermissionsAsync();
@@ -58,9 +73,12 @@ export default function CreatePostsScreen({ navigation }) {
     } else setLocation((await Location.getCurrentPositionAsync({})).coords);
   };
 
-  const sendPhoto = async () => {
+  const sendPhoto = async e => {
     navigation.navigate('Posts', { photo });
     uploadPostToServer();
+    setIsShowKeyboard(false);
+    setPlace('');
+    setTitle('');
   };
 
   // function toggleCameraType() {
@@ -126,52 +144,61 @@ export default function CreatePostsScreen({ navigation }) {
   };
 
   return (
-    <View style={styles.container}>
-      {isFocused && (
-        <View style={styles.cameraWrapper}>
-          <Camera style={styles.camera} ref={setCamera} type={type}>
-            {photo && (
-              <View style={styles.photoContainer}>
-                <Image
-                  source={{ uri: photo }}
-                  style={{ height: 100, width: 100 }}
-                />
-              </View>
-            )}
-            <TouchableOpacity onPress={takePhoto} style={styles.snapContainer}>
-              <FontAwesome name="camera" size={24} color="#FFFFFF" />
-            </TouchableOpacity>
-          </Camera>
+    <TouchableWithoutFeedback onPress={keyboardHide}>
+      <View style={styles.container}>
+        {isFocused && !isShowKeyboard && (
+          <View style={styles.cameraWrapper}>
+            <Camera style={styles.camera} ref={setCamera} type={type}>
+              {photo && (
+                <View style={styles.photoContainer}>
+                  <Image
+                    source={{ uri: photo }}
+                    style={{ height: 100, width: 100 }}
+                  />
+                </View>
+              )}
+              <TouchableOpacity
+                onPress={takePhoto}
+                style={styles.snapContainer}
+              >
+                <FontAwesome name="camera" size={24} color="#FFFFFF" />
+              </TouchableOpacity>
+            </Camera>
+          </View>
+        )}
+
+        <View style={styles.inputContainer}>
+          <TextInput
+            value={title}
+            placeholder="Title..."
+            style={styles.input}
+            onChangeText={setTitle}
+          />
         </View>
-      )}
-      {/* <TouchableOpacity onPress={toggleCameraType}>
-        <Entypo name="cycle" size={24} color="black" />
-      </TouchableOpacity> */}
-      <View style={styles.inputContainer}>
-        <TextInput
-          placeholder="Title..."
-          style={styles.input}
-          onChangeText={setTitle}
-        />
-      </View>
-      <View style={styles.inputContainer}>
-        <TextInput
-          placeholder="Location..."
-          style={styles.input}
-          onChangeText={setPlace}
-        />
-      </View>
-      <View>
-        <TouchableOpacity
-          disabled={!photo}
-          onPress={sendPhoto}
-          style={styles.sendBtn}
+        <View style={styles.inputContainer}>
+          <TextInput
+            value={place}
+            placeholder="Location..."
+            style={styles.input}
+            onChangeText={setPlace}
+          />
+        </View>
+        <View
+        // style={{
+        //   marginBottom: isShowKeyboard ? 50 : 200,
+        //   // width: dimensions,
+        // }}
         >
-          <Text style={styles.sendLabel}>SEND</Text>
-        </TouchableOpacity>
+          <TouchableOpacity
+            disabled={!photo}
+            onPress={sendPhoto}
+            style={styles.sendBtn}
+          >
+            <Text style={styles.sendLabel}>SEND</Text>
+          </TouchableOpacity>
+        </View>
       </View>
-      {/* </View> */}
-    </View>
+    </TouchableWithoutFeedback>
   );
 }
 
