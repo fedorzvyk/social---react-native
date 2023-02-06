@@ -92,7 +92,7 @@ export default function LoginScreen({ navigation }) {
                       onFocus={() => setIsShowKeyboard(true)}
                       style={styles.input}
                       onChangeText={value =>
-                        setState(prev => ({ ...prev, email: value }))
+                        setState(prev => ({ ...prev, email: value.trim() }))
                       }
                       value={state.email}
                       placeholder="Email"
@@ -104,7 +104,7 @@ export default function LoginScreen({ navigation }) {
                       onFocus={() => setIsShowKeyboard(true)}
                       style={styles.input}
                       onChangeText={value =>
-                        setState(prev => ({ ...prev, password: value }))
+                        setState(prev => ({ ...prev, password: value.trim() }))
                       }
                       value={state.password}
                       placeholder="Password"

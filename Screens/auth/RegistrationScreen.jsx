@@ -122,7 +122,7 @@ export default function RegistrationScreen({ navigation }) {
                       onFocus={() => setIsShowKeyboard(true)}
                       style={styles.input}
                       onChangeText={value =>
-                        setState(prev => ({ ...prev, email: value }))
+                        setState(prev => ({ ...prev, email: value.trim() }))
                       }
                       value={state.email}
                       placeholder="Email"
@@ -134,7 +134,7 @@ export default function RegistrationScreen({ navigation }) {
                       onFocus={() => setIsShowKeyboard(true)}
                       style={styles.input}
                       onChangeText={value =>
-                        setState(prev => ({ ...prev, password: value }))
+                        setState(prev => ({ ...prev, password: value.trim() }))
                       }
                       value={state.password}
                       placeholder="Password"
@@ -158,7 +158,6 @@ export default function RegistrationScreen({ navigation }) {
                           onPress={() => navigation.navigate('Login')}
                         >
                           <Text style={{ fontSize: 18, color: '#ff6347' }}>
-                            {' '}
                             Login
                           </Text>
                         </TouchableOpacity>

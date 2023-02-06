@@ -146,7 +146,12 @@ export default function CreatePostsScreen({ navigation }) {
       <View style={styles.container}>
         {isFocused && !isShowKeyboard && (
           <View style={styles.cameraWrapper}>
-            <Camera style={styles.camera} ref={setCamera} type={type}>
+            <Camera
+              style={styles.camera}
+              ref={setCamera}
+              type={type}
+              // ratio={'4:3'}
+            >
               {photo && (
                 <View style={styles.photoContainer}>
                   <Image
@@ -227,6 +232,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
 
+    // aspectRatio: 4 / 3,
     height: 240,
   },
   notice: {
