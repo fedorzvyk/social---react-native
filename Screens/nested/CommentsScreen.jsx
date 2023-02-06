@@ -98,6 +98,8 @@ const CommentsScreen = ({ route }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    borderColor: '#BDBDBD',
+    borderWidth: 1,
     backgroundColor: '#FFFFFF',
     // justifyContent: 'center',
     paddingHorizontal: 16,

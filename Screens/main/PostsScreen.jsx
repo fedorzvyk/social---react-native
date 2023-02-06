@@ -1,21 +1,36 @@
 import React from 'react';
-// import { moduleName } from 'react-native';
+import { Button, TouchableOpacity } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
+import { Octicons } from '@expo/vector-icons';
 
 import DefaultScreenPosts from '../nested/DefaultScreenPosts';
 import CommentsScreen from '../nested/CommentsScreen';
 import MapScreen from '../nested/MapScreen';
 
+import { useDispatch } from 'react-redux';
+import { authSignOutUser } from '../../redux/auth/authOperations';
+
 const NestedScreen = createStackNavigator();
 
 const PostsScreen = ({}) => {
+  const dispatch = useDispatch();
+  const signOut = () => {
+    dispatch(authSignOutUser());
+  };
   return (
     <NestedScreen.Navigator>
       <NestedScreen.Screen
         // options={{ headerShown: false }}
         name="Posts"
         component={DefaultScreenPosts}
-        options={{ headerTitleAlign: 'center' }}
+        options={{
+          headerTitleAlign: 'center',
+          headerRight: () => (
+            <TouchableOpacity style={{ marginRight: 16 }} onPress={signOut}>
+              <Octicons name="sign-out" size={24} color="#BDBDBD" />
+            </TouchableOpacity>
+          ),
+        }}
       />
       <NestedScreen.Screen
         name="Comments"

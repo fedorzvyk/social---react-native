@@ -178,10 +178,17 @@ export default function CreatePostsScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    borderColor: '#BDBDBD',
+    borderWidth: 1,
     backgroundColor: '#fff',
     paddingHorizontal: 16,
   },
-  cameraWrapper: { borderRadius: 8, overflow: 'hidden', marginBottom: 32 },
+  cameraWrapper: {
+    borderRadius: 8,
+    overflow: 'hidden',
+    marginBottom: 32,
+    marginTop: 32,
+  },
   camera: {
     alignItems: 'center',
     justifyContent: 'center',

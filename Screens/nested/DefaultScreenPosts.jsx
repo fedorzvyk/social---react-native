@@ -10,12 +10,14 @@ import {
 } from 'react-native';
 import { onSnapshot, collection } from 'firebase/firestore';
 import { db } from '../../firebase/config';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { Ionicons, Feather } from '@expo/vector-icons';
 
 const DefaultScreenPosts = ({ route, navigation }) => {
   const [posts, setPosts] = useState([]);
   // const [comments, setComments] = useState([]);
+  const { userId, login } = useSelector(state => state.auth);
 
   const getAllPost = async () => {
     const dbRef = await collection(db, 'posts');
@@ -44,6 +46,22 @@ const DefaultScreenPosts = ({ route, navigation }) => {
 
   return (
     <View style={styles.container}>
+      <View
+        style={{
+          display: 'flex',
+          flexDirection: 'row',
+          marginBottom: 32,
+          marginTop: 32,
+          alignItems: 'center',
+        }}
+      >
+        <Image
+          source={require('../../assets/images/avatar.png')}
+          style={styles.avatar}
+        />
+        <Text style={styles.userName}>{login}</Text>
+        {/* <Text style={styles.titleText}>{item.title}</Text> */}
+      </View>
       <FlatList
         data={posts}
         keyExtractor={(item, indx) => indx.toString()}
@@ -93,6 +111,8 @@ const DefaultScreenPosts = ({ route, navigation }) => {
 
 const styles = StyleSheet.create({
   container: {
+    borderColor: '#BDBDBD',
+    borderWidth: 1,
     flex: 1,
     justifyContent: 'center',
     backgroundColor: '#fff',
@@ -134,6 +154,16 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: 'Roboto-Regular',
     textDecorationLine: 'underline',
+  },
+  avatar: {
+    height: 60,
+    width: 60,
+    borderRadius: 16,
+    marginRight: 8,
+  },
+  userName: {
+    fontFamily: 'Roboto-Bold',
+    fontSize: 13,
   },
 });
 
